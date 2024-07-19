@@ -3,25 +3,35 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { register } from '../../service/authService';
 
 export default function Register() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log('Login with:', email, password)
-  }
+
+    try {
+      console.log('Register with:', firstName, lastName, email, password)
+      const data = await register(firstName, lastName, email, password);
+
+    }catch(err: any){
+      console.log("Failed to register: ", err);
+      setError(err.message || "Failed to register");
+    }
+    
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <header className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
-        <Link href="/">
+        <Link href="/" className="text-2xl font-bold text-blue-600">
           <div className="flex items-center justify-center">
-            <a className="text-2xl font-bold text-blue-600" href="#">
               ScribeAI
-            </a>
           </div>
         </Link>
       </header>
@@ -35,6 +45,42 @@ export default function Register() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              <div className="mt-1">
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="firstName"
+                  autoComplete="firstName"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <div className="mt-1">
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="lastName"
+                  autoComplete="lastName"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -114,7 +160,7 @@ export default function Register() {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div>
                 <Link
-                  href="#"
+                  href="http://localhost:5000/api/auth/google"
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                 >
                   <span className="sr-only">Sign up in with Google</span>
