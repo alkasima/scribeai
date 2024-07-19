@@ -1,29 +1,65 @@
-import Link from 'next/link';
+import React, { useState } from 'react';
+
+const ContentTypeButton = ({ icon, label, onClick }) => (
+  <button
+    onClick={onClick}
+    className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+  >
+    <span className="mr-2 text-xl">{icon}</span>
+    <span>{label}</span>
+  </button>
+);
 
 const ContentCreationWidget = () => {
-  return (
-    <div className="w-full md:w-1/2 px-6 py-8">
-      <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-        <div className="p-3 rounded-full bg-indigo-600 bg-opacity-75">
-          <svg className="h-8 w-8 text-white" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.2 9.08889C18.2 11.5373 16.3196 13.5222 14 13.5222C11.6804 13.5222 9.79999 11.5373 9.79999 9.08889C9.79999 6.64043 11.6804 4.65556 14 4.65556C16.3196 4.65556 18.2 6.64043 18.2 9.08889Z" fill="currentColor"/>
-            <path d="M25.2 12.0444C25.2 13.6768 23.9464 15 22.4 15C20.8536 15 19.6 13.6768 19.6 12.0444C19.6 10.4121 20.8536 9.08889 22.4 9.08889C23.9464 9.08889 25.2 10.4121 25.2 12.0444Z" fill="currentColor"/>
-            <path d="M19.6 22.3889C19.6 19.1243 17.0927 16.4778 14 16.4778C10.9072 16.4778 8.39999 19.1243 8.39999 22.3889V26.8222H19.6V22.3889Z" fill="currentColor"/>
-            <path d="M8.39999 12.0444C8.39999 13.6768 7.14639 15 5.59999 15C4.05359 15 2.79999 13.6768 2.79999 12.0444C2.79999 10.4121 4.05359 9.08889 5.59999 9.08889C7.14639 9.08889 8.39999 10.4121 8.39999 12.0444Z" fill="currentColor"/>
-            <path d="M22.4 26.8222V22.3889C22.4 20.8312 22.0195 19.3671 21.351 18.0949C21.6863 18.0039 22.0378 17.9556 22.4 17.9556C24.7197 17.9556 26.6 19.9404 26.6 22.3889V26.8222H22.4Z" fill="currentColor"/>
-            <path d="M6.64896 18.0949C5.98058 19.3671 5.59999 20.8312 5.59999 22.3889V26.8222H1.39999V22.3889C1.39999 19.9404 3.2804 17.9556 5.59999 17.9556C5.96219 17.9556 6.31367 18.0039 6.64896 18.0949Z" fill="currentColor"/>
-          </svg>
-        </div>
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedContentType, setSelectedContentType] = useState(null);
 
-        <div className="mx-5">
-          <h4 className="text-2xl font-semibold text-gray-700">Create New Content</h4>
-          <div className="mt-4">
-              <a href="/create/blog-post" className="text-sm text-gray-600 mr-4 hover:text-indigo-600">Blog Post</a>
-              <a href="/create/social-media" className="text-sm text-gray-600 mr-4 hover:text-indigo-600">Social Media</a>            
-              <a href="/create/product-description" className="text-sm text-gray-600 hover:text-indigo-600">Product Description</a>
+  const handleContentTypeSelect = (contentType) => {
+    setSelectedContentType(contentType);
+    setIsModalOpen(true);
+  };
+
+  return (
+    <div className="bg-gray-100 p-6 rounded-xl w-1/2">
+      <h2 className="text-2xl font-bold mb-4">Create New Content</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <ContentTypeButton
+          icon="📝"
+          label="Blog Post"
+          onClick={() => handleContentTypeSelect('blogPost')}
+        />
+        <ContentTypeButton
+          icon="📱"
+          label="Social Media"
+          onClick={() => handleContentTypeSelect('socialMedia')}
+        />
+        <ContentTypeButton
+          icon="🛍️"
+          label="Product Description"
+          onClick={() => handleContentTypeSelect('productDescription')}
+        />
+        <ContentTypeButton
+          icon="➕"
+          label="Other"
+          onClick={() => handleContentTypeSelect('other')}
+        />
+      </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg">
+            <h3 className="text-xl font-bold mb-4">
+              Create {selectedContentType}
+            </h3>
+            {/* Add form fields for content creation here */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Close
+            </button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

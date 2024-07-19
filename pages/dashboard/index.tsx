@@ -21,11 +21,11 @@ export default function Dashboard() {
             <h3 className="text-gray-700 text-3xl font-medium">Dashboard</h3>
             
             <div className="mt-4">
-              <div className="flex flex-wrap -mx-6">
-                <ContentCreationWidget />
-                <RecentContentWidget />
-              </div>
+            <div className="flex space-x-4">
+              <ContentCreationWidget />
+              <RecentContentWidget />
             </div>
+          </div>
             
             <div className="mt-8">
               <AnalyticsWidget />
