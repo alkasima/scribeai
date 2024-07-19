@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { login } from '../../service/authService';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,10 +17,12 @@ export default function Login() {
     try {
       const data = await login(email, password);
       console.log('Logged in with:', data);
-      // Handle post-login logic here, e.g., redirecting to a dashboard
+      toast.success('Logged successfully');
+      router.push('/dashboard');
     } catch (err: any) {
       console.error('Failed to login:', err);
       setError(err.message || 'Failed to login');
+      toast.error(err.message || 'Failed to login');
     }
   };
 

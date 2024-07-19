@@ -4,6 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { register } from '../../service/authService';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+
 
 export default function Register() {
   const [firstName, setFirstName] = useState('');
@@ -11,6 +14,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,10 +22,12 @@ export default function Register() {
     try {
       console.log('Register with:', firstName, lastName, email, password)
       const data = await register(firstName, lastName, email, password);
-
+      toast.success("Registered successfully");
+      router.push('/dashboard');
     }catch(err: any){
       console.log("Failed to register: ", err);
       setError(err.message || "Failed to register");
+      toast.error(err.message || "Failed to register");
     }
     
   };
