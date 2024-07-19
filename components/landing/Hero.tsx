@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link';
 
 const Hero = () => {
   return (
@@ -10,8 +11,8 @@ const Hero = () => {
               <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">Revolutionize Your Content Creation</h1>
               <p className="text-xl mb-8">Harness the power of AI to create engaging, SEO-optimized content in seconds.</p>
               <div className="flex space-x-4">
-                <a href="/auth/register" className="bg-white text-blue-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">Start Free Trial</a>
-                <a href="#" className="border-2 border-white text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">Watch Demo</a>
+                <Link href="/auth/register" className="bg-white text-blue-600 px-6 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition duration-300">Start Free Trial</Link>
+                <Link href="#" className="border-2 border-white text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">Watch Demo</Link>
               </div>
             </div>
             <div className="md:w-1/2">
