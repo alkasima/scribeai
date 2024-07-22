@@ -58,7 +58,7 @@ const ContentCreationWidget: React.FC = () => {
   const handleGenerateContent = async () => {
     setIsGenerating(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/content/generate', {
+      const response = await axios.post('https://scribeai-backend.onrender.com/api/content/generate', {
         prompt: formData.prompt,
         type: selectedContentType,
       });
