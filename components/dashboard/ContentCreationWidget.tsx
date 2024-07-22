@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
-interface ContentTypeButtonProps {
-  icon: string;
-  label: string;
-  onClick: () => void;
-}
-
-const ContentTypeButton: React.FC<ContentTypeButtonProps> = ({ icon, label, onClick }) => (
-  <button
-    onClick={onClick}
-    className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
-  >
-    <span className="mr-2 text-xl">{icon}</span>
-    <span>{label}</span>
-  </button>
-);
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 type ContentType = 'blogPost' | 'socialMedia' | 'productDescription' | 'other';
 
@@ -27,7 +14,7 @@ interface FormData {
   content?: string;
   platform?: string;
   productName?: string;
-  prompt?: string;
+  prompt?: string; // Add prompt property
 }
 
 const ContentCreationWidget: React.FC = () => {
@@ -55,7 +42,6 @@ const ContentCreationWidget: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Simulate a backend API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       console.log('Submitted content:', { type: selectedContentType, ...formData });
       toast.success('Content created successfully!');
@@ -72,12 +58,21 @@ const ContentCreationWidget: React.FC = () => {
   const handleGenerateContent = async () => {
     setIsGenerating(true);
     try {
-      // Simulate AI content generation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const generatedContent = `<p>This is AI-generated content for ${selectedContentType}, based on the prompt: "${formData.prompt}". You can now edit this content as needed.</p>`;
-      setFormData(prevData => ({ ...prevData, content: generatedContent }));
+      const response = await axios.post('http://127.0.0.1:5000/api/content/generate', {
+        prompt: formData.prompt,
+        type: selectedContentType,
+      });
+      const { title, content } = response.data;
+      console.log('Generated data:', response.data);
+      setFormData(prevData => ({
+        ...prevData,
+        title: title || prevData.title,
+        content: content || prevData.content,
+      }));
+      toast.success('Content generated successfully!');
     } catch (error) {
       console.error("Error generating content:", error);
+      toast.error('Failed to generate content.');
     } finally {
       setIsGenerating(false);
     }
@@ -111,7 +106,7 @@ const ContentCreationWidget: React.FC = () => {
           <input
             type="text"
             name="title"
-            placeholder="Blog Title"
+            placeholder="Blog Title "
             value={formData.title || ''}
             onChange={handleInputChange}
             className="w-full p-2 mb-4 border rounded"
@@ -159,26 +154,34 @@ const ContentCreationWidget: React.FC = () => {
     <div className="bg-gray-100 p-6 rounded-xl w-1/2">
       <h2 className="text-2xl font-bold mb-4">Create New Content</h2>
       <div className="grid grid-cols-2 gap-4">
-        <ContentTypeButton
-          icon="📝"
-          label="Blog Post"
+        <button
           onClick={() => handleContentTypeSelect('blogPost')}
-        />
-        <ContentTypeButton
-          icon="📱"
-          label="Social Media"
+          className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+        >
+          <span className="mr-2 text-xl">📝</span>
+          <span>Blog Post</span>
+        </button>
+        <button
           onClick={() => handleContentTypeSelect('socialMedia')}
-        />
-        <ContentTypeButton
-          icon="🛍️"
-          label="Product Description"
+          className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+        >
+          <span className="mr-2 text-xl">📱</span>
+          <span>Social Media</span>
+        </button>
+        <button
           onClick={() => handleContentTypeSelect('productDescription')}
-        />
-        <ContentTypeButton
-          icon="➕"
-          label="Other"
+          className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+        >
+          <span className="mr-2 text-xl">🛍️</span>
+          <span>Product Description</span>
+        </button>
+        <button
           onClick={() => handleContentTypeSelect('other')}
-        />
+          className="flex items-center justify-center p-3 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors"
+        >
+          <span className="mr-2 text-xl">➕</span>
+          <span>Other</span>
+        </button>
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -198,7 +201,7 @@ const ContentCreationWidget: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className={`px-6 py-2 text-white rounded ${isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
+                  className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Creating...' : 'Create'}
