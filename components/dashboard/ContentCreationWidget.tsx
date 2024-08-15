@@ -62,8 +62,15 @@ const ContentCreationWidget: React.FC = () => {
         prompt: formData.prompt,
         type: selectedContentType,
       });
-      const { title, content } = response.data;
+      let { title, content } = response.data;
       console.log('Generated data:', response.data);
+  
+      // Remove everything before and including "Answer:" from the content
+      const answerIndex = content.indexOf('Answer:');
+      if (answerIndex !== -1) {
+        content = content.substring(answerIndex + 7).trim(); // Removes "Answer:" and trims the rest
+      }
+  
       setFormData(prevData => ({
         ...prevData,
         title: title || prevData.title,
@@ -77,6 +84,7 @@ const ContentCreationWidget: React.FC = () => {
       setIsGenerating(false);
     }
   };
+  
 
   const renderFormFields = () => {
     return (
