@@ -13,8 +13,7 @@ interface FormData {
   title?: string;
   content?: string;
   platform?: string;
-  productName?: string;
-  prompt?: string; // Add prompt property
+  prompt?: string;
 }
 
 const ContentCreationWidget: React.FC = () => {
@@ -65,10 +64,9 @@ const ContentCreationWidget: React.FC = () => {
       let { title, content } = response.data;
       console.log('Generated data:', response.data);
   
-      // Remove everything before and including "Answer:" from the content
       const answerIndex = content.indexOf('Answer:');
       if (answerIndex !== -1) {
-        content = content.substring(answerIndex + 7).trim(); // Removes "Answer:" and trims the rest
+        content = content.substring(answerIndex + 7).trim();
       }
   
       setFormData(prevData => ({
@@ -84,7 +82,6 @@ const ContentCreationWidget: React.FC = () => {
       setIsGenerating(false);
     }
   };
-  
 
   const renderFormFields = () => {
     return (
@@ -114,7 +111,7 @@ const ContentCreationWidget: React.FC = () => {
           <input
             type="text"
             name="title"
-            placeholder="Blog Title "
+            placeholder="Blog Title"
             value={formData.title || ''}
             onChange={handleInputChange}
             className="w-full p-2 mb-4 border rounded"
@@ -132,16 +129,6 @@ const ContentCreationWidget: React.FC = () => {
             <option value="facebook">Facebook</option>
             <option value="instagram">Instagram</option>
           </select>
-        )}
-        {selectedContentType === 'productDescription' && (
-          <input
-            type="text"
-            name="productName"
-            placeholder="Product Name"
-            value={formData.productName || ''}
-            onChange={handleInputChange}
-            className="w-full p-2 mb-4 border rounded"
-          />
         )}
         <div className="mb-4">
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
