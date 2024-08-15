@@ -93,7 +93,11 @@ const ContentCreationWidget: React.FC = () => {
           <textarea
             id="prompt"
             name="prompt"
-            placeholder="e.g., Write a blog post about the benefits of exercise..."
+            placeholder={
+              selectedContentType === 'productDescription'
+                ? 'Write a prompt for a product or product name...'
+                : 'e.g., Write a blog post about the benefits of exercise...'
+            }
             value={formData.prompt || ''}
             onChange={handleInputChange}
             className="w-full p-2 border rounded h-24 resize-y"
